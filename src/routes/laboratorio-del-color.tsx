@@ -125,7 +125,7 @@ function ColorLab() {
 
               <div className="mt-5 rounded-2xl bg-muted p-4 text-sm">
                 <p className="font-semibold">¿Por qué se relacionan?</p>
-                <p className="mt-1 text-muted-foreground">{w.why(related.map((c) => c.name.toLowerCase()))}</p>
+                <p className="mt-1 text-muted-foreground">{(() => { const t = w.why(related.map((c) => c.name.toLowerCase())); return t.charAt(0).toUpperCase() + t.slice(1); })()}</p>
               </div>
               <button onClick={() => setBase(color.hex)} className="btn btn-outline mt-5 text-sm">Usar {color.name.toLowerCase()} en el generador</button>
             </div>
