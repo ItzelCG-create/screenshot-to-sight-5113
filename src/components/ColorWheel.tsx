@@ -46,7 +46,7 @@ export function ColorWheel({ selected, onSelect, filter }: { selected: number; o
           />
         );
       })}
-      <circle cx="100" cy="100" r="36" fill={wheel[selected].hex} stroke="white" strokeWidth="3" />
+      <circle cx="100" cy="100" r="36" fill={wheel[selected]!.hex} stroke="white" strokeWidth="3" />
     </svg>
   );
 }

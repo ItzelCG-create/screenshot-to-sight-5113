@@ -100,7 +100,7 @@ function Anatomy() {
           {c.cards.map((card, i) => (
             <article key={card.t} className="card-soft overflow-hidden">
               <div className="paper bg-muted p-4">
-                <svg viewBox="0 0 200 200" className="mx-auto h-48 w-48" role="img" aria-label={`Ilustración de referencia: ${card.t}`}>{svgs[cat][i]}</svg>
+                <svg viewBox="0 0 200 200" className="mx-auto h-48 w-48" role="img" aria-label={`Ilustración de referencia: ${card.t}`}>{svgs[cat]?.[i]}</svg>
               </div>
               <div className="p-5">
                 <h3 className="text-lg font-semibold">{card.t}</h3>

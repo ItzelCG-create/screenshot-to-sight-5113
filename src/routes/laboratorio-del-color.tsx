@@ -80,12 +80,12 @@ function ColorLab() {
           <h2 id="rueda" className="text-3xl font-bold">La rueda cromática</h2>
           <p className="mt-3 text-muted-foreground">Toca un segmento para conocerlo. Esta rueda usa el modelo tradicional de pintura (RYB).</p>
           <div className="card-soft mt-5 flex items-center gap-4 p-5">
-            <span className="h-14 w-14 shrink-0 rounded-2xl" style={{ backgroundColor: wheel[sel].hex }} />
+            <span className="h-14 w-14 shrink-0 rounded-2xl" style={{ backgroundColor: wheel[sel]!.hex }} />
             <div>
-              <p className="text-lg font-semibold">{wheel[sel].name}</p>
-              <p className="text-sm text-muted-foreground">Color {wheel[sel].type.toLowerCase()} · complementario: {wheel[(sel + 6) % 12].name.toLowerCase()}</p>
+              <p className="text-lg font-semibold">{wheel[sel]!.name}</p>
+              <p className="text-sm text-muted-foreground">Color {wheel[sel]!.type.toLowerCase()} · complementario: {wheel[(sel + 6) % 12]!.name.toLowerCase()}</p>
             </div>
-            <button onClick={() => setBase(wheel[sel].hex)} className="btn btn-outline ml-auto text-sm">Usar en generador</button>
+            <button onClick={() => setBase(wheel[sel]!.hex)} className="btn btn-outline ml-auto text-sm">Usar en generador</button>
           </div>
           <div className="mt-5 grid gap-3">
             {types.map((t) => (
@@ -104,7 +104,7 @@ function ColorLab() {
           {examples.map((e) => (
             <div key={e.name} className="card-soft p-5">
               <div className="flex h-16 overflow-hidden rounded-xl">
-                {e.idx.map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i].hex }} />)}
+                {e.idx.map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}
               </div>
               <p className="mt-3 font-semibold">{e.name}</p>
               <p className="text-sm text-muted-foreground">{e.text}</p>
@@ -114,12 +114,12 @@ function ColorLab() {
         <div className="mt-5 grid gap-5 md:grid-cols-2">
           <div className="card-soft p-5">
             <p className="flex items-center gap-2 font-semibold"><Flame className="h-5 w-5 text-coral" /> Colores cálidos</p>
-            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i].hex }} />)}</div>
+            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}</div>
             <p className="mt-3 text-sm text-muted-foreground">Rojos, naranjas y amarillos. Transmiten energía y cercanía, y parecen avanzar hacia el espectador.</p>
           </div>
           <div className="card-soft p-5">
             <p className="flex items-center gap-2 font-semibold"><Snowflake className="h-5 w-5 text-teal" /> Colores fríos</p>
-            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[6, 7, 8, 9, 10, 11].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i].hex }} />)}</div>
+            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[6, 7, 8, 9, 10, 11].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}</div>
             <p className="mt-3 text-sm text-muted-foreground">Azules, verdes y violetas. Evocan calma y distancia; ayudan a crear profundidad.</p>
           </div>
         </div>

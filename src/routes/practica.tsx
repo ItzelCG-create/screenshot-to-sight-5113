@@ -41,7 +41,7 @@ function Quiz() {
   const [checked, setChecked] = useState(false);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  const q = quiz[i];
+  const q = quiz[i]!;
 
   const reset = () => { setI(0); setPick(null); setChecked(false); setScore(0); setDone(false); };
 
