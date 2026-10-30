@@ -53,7 +53,7 @@ function HeroArt() {
 function Index() {
   return (
     <>
-      <section className="bg-hero paper">
+      <section className="bg-hero">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div>
             <p className="inline-block rounded-full bg-card px-4 py-1 text-sm font-semibold text-primary shadow-soft">Cuaderno digital de arte</p>
