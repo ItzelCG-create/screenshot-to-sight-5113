@@ -10,33 +10,80 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnatomiaRouteImport } from './routes/anatomia'
+import { Route as LaboratorioDelColorRouteImport } from './routes/laboratorio-del-color'
+import { Route as PracticaRouteImport } from './routes/practica'
+import { Route as RecursosRouteImport } from './routes/recursos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnatomiaRoute = AnatomiaRouteImport.update({
+  id: '/anatomia',
+  path: '/anatomia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LaboratorioDelColorRoute = LaboratorioDelColorRouteImport.update({
+  id: '/laboratorio-del-color',
+  path: '/laboratorio-del-color',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticaRoute = PracticaRouteImport.update({
+  id: '/practica',
+  path: '/practica',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecursosRoute = RecursosRouteImport.update({
+  id: '/recursos',
+  path: '/recursos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anatomia': typeof AnatomiaRoute
+  '/laboratorio-del-color': typeof LaboratorioDelColorRoute
+  '/practica': typeof PracticaRoute
+  '/recursos': typeof RecursosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anatomia': typeof AnatomiaRoute
+  '/laboratorio-del-color': typeof LaboratorioDelColorRoute
+  '/practica': typeof PracticaRoute
+  '/recursos': typeof RecursosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anatomia': typeof AnatomiaRoute
+  '/laboratorio-del-color': typeof LaboratorioDelColorRoute
+  '/practica': typeof PracticaRoute
+  '/recursos': typeof RecursosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/anatomia' | '/laboratorio-del-color' | '/practica' | '/recursos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/anatomia' | '/laboratorio-del-color' | '/practica' | '/recursos'
+  id:
+    | '__root__'
+    | '/'
+    | '/anatomia'
+    | '/laboratorio-del-color'
+    | '/practica'
+    | '/recursos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnatomiaRoute: typeof AnatomiaRoute
+  LaboratorioDelColorRoute: typeof LaboratorioDelColorRoute
+  PracticaRoute: typeof PracticaRoute
+  RecursosRoute: typeof RecursosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +95,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anatomia': {
+      id: '/anatomia'
+      path: '/anatomia'
+      fullPath: '/anatomia'
+      preLoaderRoute: typeof AnatomiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/laboratorio-del-color': {
+      id: '/laboratorio-del-color'
+      path: '/laboratorio-del-color'
+      fullPath: '/laboratorio-del-color'
+      preLoaderRoute: typeof LaboratorioDelColorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practica': {
+      id: '/practica'
+      path: '/practica'
+      fullPath: '/practica'
+      preLoaderRoute: typeof PracticaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recursos': {
+      id: '/recursos'
+      path: '/recursos'
+      fullPath: '/recursos'
+      preLoaderRoute: typeof RecursosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnatomiaRoute: AnatomiaRoute,
+  LaboratorioDelColorRoute: LaboratorioDelColorRoute,
+  PracticaRoute: PracticaRoute,
+  RecursosRoute: RecursosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,160 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Check, Copy, Flame, Snowflake } from "lucide-react";
+import { ColorWheel, wheel } from "@/components/ColorWheel";
+import { PageIntro, useCopy } from "@/components/SiteChrome";
+import { generatePalette, harmonies, readableText, type HarmonyKey } from "@/lib/color";
+
+export const Route = createFileRoute("/laboratorio-del-color")({
+  head: () => ({
+    meta: [
+      { title: "Laboratorio del color — Trazo & Color" },
+      { name: "description", content: "Rueda cromática interactiva, colores primarios, secundarios y terciarios, y generador de paletas con códigos HEX." },
+      { property: "og:title", content: "Laboratorio del color — Trazo & Color" },
+      { property: "og:description", content: "Explora la rueda cromática y genera paletas armoniosas copiando sus códigos HEX." },
+    ],
+  }),
+  component: ColorLab,
+});
+
+const types = [
+  { key: "Primario", title: "Primarios", text: "Amarillo, rojo y azul. No se obtienen mezclando otros colores: son la base de todos los demás." },
+  { key: "Secundario", title: "Secundarios", text: "Naranja, violeta y verde. Surgen al mezclar dos primarios en partes iguales." },
+  { key: "Terciario", title: "Terciarios", text: "Mezcla de un primario con un secundario vecino, como rojo anaranjado o azul verdoso." },
+];
+
+const examples = [
+  { name: "Complementarios", idx: [4, 10], text: "Opuestos en la rueda: rojo y verde." },
+  { name: "Análogos", idx: [8, 9, 10], text: "Vecinos en la rueda: azul, azul verdoso y verde." },
+  { name: "Triádicos", idx: [0, 4, 8], text: "Equidistantes: amarillo, rojo y azul." },
+];
+
+function Swatch({ hex, copied, onCopy }: { hex: string; copied: boolean; onCopy: () => void }) {
+  const dark = readableText(hex) === "dark";
+  return (
+    <div className="card-soft overflow-hidden">
+      <div className="h-28" style={{ backgroundColor: hex }} />
+      <div className="flex items-center justify-between gap-2 p-3">
+        <code className="font-mono text-sm font-semibold">{hex}</code>
+        <button
+          onClick={onCopy}
+          className="grid h-10 w-10 place-items-center rounded-full hover:bg-secondary"
+          aria-label={`Copiar código ${hex}`}
+          data-dark={dark}
+        >
+          {copied ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ColorLab() {
+  const [sel, setSel] = useState(4);
+  const [filter, setFilter] = useState("Todos");
+  const [base, setBase] = useState("#8A5CF6");
+  const [harmony, setHarmony] = useState<HarmonyKey>("complementaria");
+  const { copied, copy } = useCopy();
+  const palette = generatePalette(base, harmony);
+  const current = harmonies.find((h) => h.key === harmony)!;
+
+  return (
+    <>
+      <PageIntro kicker="Teoría del color" title="Laboratorio del color">
+        Descubre cómo se relacionan los colores, por qué algunas combinaciones funcionan y crea tus propias paletas.
+      </PageIntro>
+
+      <section className="mx-auto grid max-w-6xl gap-10 px-5 py-10 md:grid-cols-2" aria-labelledby="rueda">
+        <div className="card-soft flex flex-col items-center p-6">
+          <ColorWheel selected={sel} onSelect={setSel} filter={filter} />
+          <div className="mt-4 flex flex-wrap justify-center gap-2" role="group" aria-label="Filtrar por tipo">
+            {["Todos", "Primario", "Secundario", "Terciario"].map((f) => (
+              <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
+                className={`rounded-full px-4 py-2 text-sm font-medium ${filter === f ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+                {f === "Todos" ? "Todos" : f + "s"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 id="rueda" className="text-3xl font-bold">La rueda cromática</h2>
+          <p className="mt-3 text-muted-foreground">Toca un segmento para conocerlo. Esta rueda usa el modelo tradicional de pintura (RYB).</p>
+          <div className="card-soft mt-5 flex items-center gap-4 p-5">
+            <span className="h-14 w-14 shrink-0 rounded-2xl" style={{ backgroundColor: wheel[sel]!.hex }} />
+            <div>
+              <p className="text-lg font-semibold">{wheel[sel]!.name}</p>
+              <p className="text-sm text-muted-foreground">Color {wheel[sel]!.type.toLowerCase()} · complementario: {wheel[(sel + 6) % 12]!.name.toLowerCase()}</p>
+            </div>
+            <button onClick={() => setBase(wheel[sel]!.hex)} className="btn btn-outline ml-auto text-sm">Usar en generador</button>
+          </div>
+          <div className="mt-5 grid gap-3">
+            {types.map((t) => (
+              <div key={t.key} className="rounded-2xl bg-muted p-4">
+                <p className="font-semibold">{t.title}</p>
+                <p className="text-sm text-muted-foreground">{t.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-10">
+        <h2 className="text-3xl font-bold">Armonías de ejemplo</h2>
+        <div className="mt-6 grid gap-5 md:grid-cols-3">
+          {examples.map((e) => (
+            <div key={e.name} className="card-soft p-5">
+              <div className="flex h-16 overflow-hidden rounded-xl">
+                {e.idx.map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}
+              </div>
+              <p className="mt-3 font-semibold">{e.name}</p>
+              <p className="text-sm text-muted-foreground">{e.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <div className="card-soft p-5">
+            <p className="flex items-center gap-2 font-semibold"><Flame className="h-5 w-5 text-coral" /> Colores cálidos</p>
+            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}</div>
+            <p className="mt-3 text-sm text-muted-foreground">Rojos, naranjas y amarillos. Transmiten energía y cercanía, y parecen avanzar hacia el espectador.</p>
+          </div>
+          <div className="card-soft p-5">
+            <p className="flex items-center gap-2 font-semibold"><Snowflake className="h-5 w-5 text-teal" /> Colores fríos</p>
+            <div className="mt-3 flex h-10 overflow-hidden rounded-xl">{[6, 7, 8, 9, 10, 11].map((i) => <span key={i} className="flex-1" style={{ backgroundColor: wheel[i]!.hex }} />)}</div>
+            <p className="mt-3 text-sm text-muted-foreground">Azules, verdes y violetas. Evocan calma y distancia; ayudan a crear profundidad.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-10" aria-labelledby="generador">
+        <div className="card-soft p-6 md:p-8">
+          <h2 id="generador" className="text-3xl font-bold">Generador de paletas</h2>
+          <div className="mt-6 flex flex-wrap items-end gap-5">
+            <label className="flex flex-col gap-2 text-sm font-medium">
+              Color base
+              <span className="flex items-center gap-3">
+                <input type="color" value={base} onChange={(e) => setBase(e.target.value.toUpperCase())} className="h-12 w-16 cursor-pointer rounded-xl border border-border bg-card" aria-label="Elegir color base" />
+                <code className="font-mono">{base.toUpperCase()}</code>
+              </span>
+            </label>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Tipo de armonía">
+              {harmonies.map((h) => (
+                <button key={h.key} onClick={() => setHarmony(h.key)} aria-pressed={harmony === h.key}
+                  className={`min-h-11 rounded-full px-4 text-sm font-medium ${harmony === h.key ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+                  {h.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="mt-5 rounded-2xl bg-muted p-4 text-sm"><strong>{current.name}:</strong> {current.desc}</p>
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {palette.map((hex, i) => <Swatch key={i + hex} hex={hex} copied={copied === hex} onCopy={() => copy(hex)} />)}
+          </div>
+          <button onClick={() => copy(palette.join(", "))} className="btn btn-primary mt-6">
+            {copied === palette.join(", ") ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} Copiar toda la paleta
+          </button>
+          <p className="sr-only" aria-live="polite">{copied ? `Copiado: ${copied}` : ""}</p>
+        </div>
+      </section>
+    </>
+  );
+}
