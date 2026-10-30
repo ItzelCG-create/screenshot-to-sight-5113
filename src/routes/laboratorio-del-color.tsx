@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Copy, Flame, Snowflake } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Copy, Flame, Snowflake } from "lucide-react";
 import { ColorWheel, wheel } from "@/components/ColorWheel";
 import { PageIntro, useCopy } from "@/components/SiteChrome";
 import { generatePalette, harmonies, readableText, type HarmonyKey } from "@/lib/color";
