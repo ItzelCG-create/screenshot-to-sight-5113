@@ -62,7 +62,7 @@ const cats = [
   ]},
   { key: "piernas", name: "Piernas y pies", cards: [
     { t: "Articulaciones", d: "La rodilla está a mitad de la pierna. Marca cadera, rodilla y tobillo como esferas para articular el movimiento." },
-    { t: "El pie como cuña", d: "Simplifica el pie en una cuña: talón, arco y dedos. Su largo equivale aproximadamente a la altura de la cabeza... ¡más uno!" },
+    { t: "El pie como cuña", d: "Simplifica el pie en una cuña: talón, arco y dedos. Su largo equivale aproximadamente a la altura de la cabeza." },
     { t: "Curvas y peso", d: "El contorno de la pierna nunca es simétrico: la pantorrilla interior está más baja que la exterior." },
   ]},
   { key: "figura", name: "Figura completa", cards: [
