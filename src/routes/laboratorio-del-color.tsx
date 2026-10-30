@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Copy, Flame, Snowflake } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Copy, Flame, Snowflake } from "lucide-react";
 import { ColorWheel, wheel } from "@/components/ColorWheel";
 import { PageIntro, useCopy } from "@/components/SiteChrome";
 import { generatePalette, harmonies, readableText, type HarmonyKey } from "@/lib/color";
@@ -49,14 +49,27 @@ function Swatch({ hex, copied, onCopy }: { hex: string; copied: boolean; onCopy:
   );
 }
 
+type WheelHarmony = { key: string; name: string; offsets: number[]; why: (n: string[]) => string };
+const wheelHarmonies: WheelHarmony[] = [
+  { key: "comp", name: "Complementaria", offsets: [0, 6], why: (n) => `${n[0]} y ${n[1]} están en lados opuestos de la rueda (180°). Al ponerse juntos se intensifican mutuamente, creando el máximo contraste.` },
+  { key: "ana", name: "Análoga", offsets: [-1, 0, 1], why: (n) => `${n[0]}, ${n[1]} y ${n[2]} son vecinos en la rueda (30° entre cada uno). Comparten pigmentos, por eso se ven naturales y armoniosos juntos.` },
+  { key: "tri", name: "Triádica", offsets: [0, 4, 8], why: (n) => `${n[0]}, ${n[1]} y ${n[2]} forman un triángulo equilátero (120°). Ofrecen variedad y equilibrio; usa uno como dominante y los otros como acento.` },
+  { key: "div", name: "Complementaria dividida", offsets: [0, 5, 7], why: (n) => `En lugar del opuesto exacto de ${n[0]}, se usan sus dos vecinos: ${n[1]} y ${n[2]}. Mantiene el contraste pero con menos tensión.` },
+  { key: "tet", name: "Tetrádica", offsets: [0, 3, 6, 9], why: (n) => `${n.join(", ")} forman un cuadrado (90°): dos parejas de complementarios. Es una paleta rica; equilibra cálidos y fríos.` },
+];
+
 function ColorLab() {
   const [sel, setSel] = useState(4);
-  const [filter, setFilter] = useState("Todos");
+  const [wh, setWh] = useState("comp");
   const [base, setBase] = useState("#8A5CF6");
   const [harmony, setHarmony] = useState<HarmonyKey>("complementaria");
   const { copied, copy } = useCopy();
   const palette = generatePalette(base, harmony);
   const current = harmonies.find((h) => h.key === harmony)!;
+  const w = wheelHarmonies.find((h) => h.key === wh)!;
+  const idx = w.offsets.map((o) => (sel + o + 12) % 12);
+  const related = idx.map((i) => wheel[i]!);
+  const color = wheel[sel]!;
 
   return (
     <>
@@ -64,37 +77,75 @@ function ColorLab() {
         Descubre cómo se relacionan los colores, por qué algunas combinaciones funcionan y crea tus propias paletas.
       </PageIntro>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-5 py-10 md:grid-cols-2" aria-labelledby="rueda">
-        <div className="card-soft flex flex-col items-center p-6">
-          <ColorWheel selected={sel} onSelect={setSel} filter={filter} />
-          <div className="mt-4 flex flex-wrap justify-center gap-2" role="group" aria-label="Filtrar por tipo">
-            {["Todos", "Primario", "Secundario", "Terciario"].map((f) => (
-              <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
-                className={`rounded-full px-4 py-2 text-sm font-medium ${filter === f ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
-                {f === "Todos" ? "Todos" : f + "s"}
-              </button>
-            ))}
+      <section className="mx-auto max-w-6xl px-5 py-8" aria-labelledby="rueda">
+        <div className="card-soft paper overflow-hidden p-5 md:p-8">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            <div className="mx-auto w-full max-w-[min(100%,460px)] text-foreground">
+              <ColorWheel selected={sel} onSelect={setSel} highlight={idx} />
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <button onClick={() => setSel((sel + 11) % 12)} className="grid h-11 w-11 place-items-center rounded-full bg-secondary text-secondary-foreground" aria-label="Color anterior"><ChevronLeft /></button>
+                <p className="min-w-40 text-center text-sm text-muted-foreground">Toca la rueda o usa las flechas</p>
+                <button onClick={() => setSel((sel + 1) % 12)} className="grid h-11 w-11 place-items-center rounded-full bg-secondary text-secondary-foreground" aria-label="Color siguiente"><ChevronRight /></button>
+              </div>
+            </div>
+
+            <div>
+              <h2 id="rueda" className="text-3xl font-bold md:text-4xl">La rueda cromática</h2>
+              <div className="mt-4 flex items-center gap-4">
+                <span className="h-14 w-14 shrink-0 rounded-2xl shadow-soft" style={{ backgroundColor: color.hex }} />
+                <div>
+                  <p className="text-xl font-semibold">{color.name}</p>
+                  <p className="text-sm text-muted-foreground">Color {color.type.toLowerCase()} · <code className="font-mono">{color.hex}</code></p>
+                </div>
+              </div>
+
+              <p className="mt-6 text-sm font-semibold">Elige una armonía</p>
+              <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Armonía cromática">
+                {wheelHarmonies.map((h) => (
+                  <button key={h.key} onClick={() => setWh(h.key)} aria-pressed={wh === h.key}
+                    className={`min-h-11 rounded-full px-4 text-sm font-medium transition-colors ${wh === h.key ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-lilac"}`}>
+                    {h.name}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-live="polite">
+                {related.map((c) => (
+                  <div key={c.hex} className="overflow-hidden rounded-2xl border border-border bg-card">
+                    <div className="h-16" style={{ backgroundColor: c.hex }} />
+                    <div className="p-2">
+                      <p className="truncate text-xs font-medium" title={c.name}>{c.name}</p>
+                      <button onClick={() => copy(c.hex)} className="mt-1 flex min-h-9 w-full items-center justify-between rounded-lg px-1 font-mono text-xs font-semibold hover:bg-secondary" aria-label={`Copiar código ${c.hex}`}>
+                        {c.hex} {copied === c.hex ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 rounded-2xl bg-muted p-4 text-sm">
+                <p className="font-semibold">¿Por qué se relacionan?</p>
+                <p className="mt-1 text-muted-foreground">{(() => { const t = w.why(related.map((c) => c.name.toLowerCase())); return t.charAt(0).toUpperCase() + t.slice(1); })()}</p>
+              </div>
+              <button onClick={() => setBase(color.hex)} className="btn btn-outline mt-5 text-sm">Usar {color.name.toLowerCase()} en el generador</button>
+            </div>
           </div>
         </div>
-        <div>
-          <h2 id="rueda" className="text-3xl font-bold">La rueda cromática</h2>
-          <p className="mt-3 text-muted-foreground">Toca un segmento para conocerlo. Esta rueda usa el modelo tradicional de pintura (RYB).</p>
-          <div className="card-soft mt-5 flex items-center gap-4 p-5">
-            <span className="h-14 w-14 shrink-0 rounded-2xl" style={{ backgroundColor: wheel[sel]!.hex }} />
-            <div>
-              <p className="text-lg font-semibold">{wheel[sel]!.name}</p>
-              <p className="text-sm text-muted-foreground">Color {wheel[sel]!.type.toLowerCase()} · complementario: {wheel[(sel + 6) % 12]!.name.toLowerCase()}</p>
-            </div>
-            <button onClick={() => setBase(wheel[sel]!.hex)} className="btn btn-outline ml-auto text-sm">Usar en generador</button>
-          </div>
-          <div className="mt-5 grid gap-3">
-            {types.map((t) => (
-              <div key={t.key} className="rounded-2xl bg-muted p-4">
-                <p className="font-semibold">{t.title}</p>
-                <p className="text-sm text-muted-foreground">{t.text}</p>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-6">
+        <div className="grid gap-4 md:grid-cols-3">
+          {types.map((t) => (
+            <div key={t.key} className="card-soft p-5">
+              <div className="flex gap-1.5">
+                {wheel.map((c, i) => c.type === t.key && (
+                  <button key={c.hex} onClick={() => setSel(i)} className="h-8 w-8 rounded-full border-2 border-card shadow-soft" style={{ backgroundColor: c.hex }} aria-label={`Seleccionar ${c.name}`} />
+                ))}
               </div>
-            ))}
-          </div>
+              <p className="mt-3 font-semibold">{t.title}</p>
+              <p className="text-sm text-muted-foreground">{t.text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
