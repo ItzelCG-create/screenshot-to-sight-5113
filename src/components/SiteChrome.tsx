@@ -84,7 +84,7 @@ export function PageIntro({ kicker, title, children }: { kicker: string; title: 
   return (
     <section className="bg-hero">
       <div className="mx-auto max-w-6xl px-5 pb-8 pt-12 md:pb-12 md:pt-20">
-        <p className="inline-flex rounded-full bg-card/70 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-coral">{kicker}</p>
+        <p className="inline-flex rounded-full bg-card/80 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent-foreground">{kicker}</p>
         <h1 className="mt-4 max-w-3xl">{title}</h1>
         <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">{children}</p>
       </div>
