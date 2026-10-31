@@ -30,8 +30,8 @@ export function SiteHeader() {
               <Link
                 to={l.to}
                 activeOptions={{ exact: true }}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                activeProps={{ className: "bg-secondary !text-secondary-foreground" }}
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
+                activeProps={{ className: "bg-primary !text-primary-foreground shadow-sm hover:!bg-primary", "aria-current": "page" }}
               >
                 {l.label}
               </Link>
@@ -39,16 +39,17 @@ export function SiteHeader() {
           ))}
         </ul>
         <button
-          className="grid h-11 w-11 place-items-center rounded-full hover:bg-secondary lg:hidden"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary text-secondary-foreground hover:bg-lilac lg:hidden"
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={open}
+          aria-controls="menu-movil"
           onClick={() => setOpen(!open)}
         >
           {open ? <X /> : <Menu />}
         </button>
       </nav>
       {open && (
-        <ul className="border-t border-border px-5 py-3 lg:hidden">
+        <ul id="menu-movil" className="animate-menu space-y-1 border-t border-border px-5 py-3 lg:hidden">
           {links.map((l) => (
             <li key={l.to}>
               <Link
@@ -56,7 +57,7 @@ export function SiteHeader() {
                 onClick={() => setOpen(false)}
                 activeOptions={{ exact: true }}
                 className="block rounded-xl px-4 py-3 font-medium hover:bg-secondary"
-                activeProps={{ className: "bg-secondary text-secondary-foreground" }}
+                activeProps={{ className: "bg-primary text-primary-foreground hover:!bg-primary", "aria-current": "page" }}
               >
                 {l.label}
               </Link>
@@ -70,8 +71,8 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border bg-secondary/40">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between">
+    <footer className="mt-20 border-t border-border bg-secondary/40 md:mt-28">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-10 md:flex-row md:items-center md:justify-between">
         <Logo />
         <p className="text-sm text-muted-foreground">Un cuaderno digital para aprender color y dibujo. Hecho con curiosidad.</p>
       </div>
@@ -82,10 +83,10 @@ export function SiteFooter() {
 export function PageIntro({ kicker, title, children }: { kicker: string; title: string; children: React.ReactNode }) {
   return (
     <section className="bg-hero">
-      <div className="mx-auto max-w-6xl px-5 pb-10 pt-14">
-        <p className="text-sm font-semibold uppercase tracking-widest text-coral">{kicker}</p>
-        <h1 className="mt-2 max-w-3xl text-4xl font-bold md:text-5xl">{title}</h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{children}</p>
+      <div className="mx-auto max-w-6xl px-5 pb-8 pt-12 md:pb-12 md:pt-20">
+        <p className="inline-flex rounded-full bg-card/80 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent-foreground">{kicker}</p>
+        <h1 className="mt-4 max-w-3xl">{title}</h1>
+        <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">{children}</p>
       </div>
     </section>
   );
