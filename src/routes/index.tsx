@@ -23,7 +23,7 @@ const sections = [
 
 function HeroArt() {
   return (
-    <svg viewBox="0 0 400 400" className="w-full max-w-lg drop-shadow-xl md:max-w-xl lg:max-w-2xl" aria-hidden="true">
+    <svg viewBox="20 10 360 380" className="w-full max-w-md drop-shadow-xl sm:max-w-lg md:max-w-none md:scale-110 lg:scale-115" aria-hidden="true">
       <rect x="40" y="30" width="300" height="340" rx="24" className="fill-card stroke-border" strokeWidth="2" transform="rotate(-4 190 200)" />
       {Array.from({ length: 8 }).map((_, i) => (
         <circle key={i} cx={58 + i * 36} cy="44" r="7" className="fill-background stroke-lilac" strokeWidth="3" transform="rotate(-4 190 200)" />
@@ -54,19 +54,20 @@ function Index() {
   return (
     <>
       <section className="bg-hero">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 md:grid-cols-[1.05fr_0.95fr] md:py-20 lg:gap-14">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-8 px-5 py-10 md:grid-cols-[1.1fr_0.9fr] md:px-8 md:py-14 lg:gap-6">
           <div className="min-w-0">
             <p className="inline-block rounded-full bg-card px-4 py-1 text-sm font-semibold text-primary shadow-soft">Cuaderno digital de arte</p>
-            <h1 className="hero-title mt-6">
-              Explora el <span className="text-coral">color</span><br />
-              Comprende el <span className="text-coral">dibujo</span><br />
-              Crea <span className="text-primary">sin límites</span>
+            <h1 className="hero-title mt-5">
+              <span className="block hero-l1">Explora el <span className="text-coral">color</span></span>
+              <span className="block hero-l2">Comprende</span>
+              <span className="block hero-l2">el <span className="text-coral">dibujo</span></span>
+              <span className="block hero-l1">Crea <span className="text-primary">sin límites</span></span>
             </h1>
-            <div className="hero-rule mt-7" aria-hidden="true" />
+            <div className="hero-rule mt-6" aria-hidden="true" />
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
               Trazo & Color es un espacio para estudiantes de diseño, ilustradores principiantes y curiosos del arte. Aprende teoría del color, crea paletas armoniosas y domina los fundamentos de la anatomía con ejercicios prácticos.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/laboratorio-del-color" className="btn btn-primary"><Palette className="h-5 w-5" /> Explorar colores</Link>
               <Link to="/anatomia" className="btn btn-outline"><PersonStanding className="h-5 w-5" /> Aprender anatomía</Link>
             </div>
@@ -74,6 +75,7 @@ function Index() {
           <div className="flex justify-center md:justify-end"><HeroArt /></div>
         </div>
       </section>
+
 
       <section className="mx-auto max-w-6xl px-5 pt-16">
         <h2 className="text-3xl font-bold">¿Qué quieres aprender hoy?</h2>
