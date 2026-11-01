@@ -12,7 +12,7 @@ const links = [
 
 export function Logo() {
   return (
-    <Link to="/" className="font-display text-xl font-extrabold tracking-tight text-primary" aria-label="Trazo & Color, inicio">
+    <Link to="/" className="font-display text-2xl font-extrabold tracking-tight text-primary" aria-label="Trazo & Color, inicio">
       Trazo <span className="text-coral">&</span> Color
     </Link>
   );
